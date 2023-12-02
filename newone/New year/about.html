@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>New Year Countdown in Japan</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      background-color: #f4f4f4;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    #countdown {
+      font-size: 24px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div id="countdown"></div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const japanTimezone = 'Asia/Tokyo';
+      const newYearDate = new Date(new Date().getFullYear() + 1, 0, 1, 0, 0, 0);
+
+      function calculateTimeRemaining(endDate) {
+        const now = new Date();
+        const utcNow = now.getTime() + now.getTimezoneOffset() * 60000; // Convert to UTC
+        const targetDate = new Date(endDate.toLocaleString("en-US", { timeZone: japanTimezone }));
+        const utcTarget = targetDate.getTime();
+        return Math.round((utcTarget - utcNow) / 1000);
+      }
+
+      function updateCountdownDisplay(timeRemaining) {
+        const days = Math.floor(timeRemaining / (60 * 60 * 24));
+        const hours = Math.floor((timeRemaining % (60 * 60 * 24)) / (60 * 60));
+        const minutes = Math.floor((timeRemaining % (60 * 60)) / 60);
+        const seconds = Math.floor(timeRemaining % 60);
+
+        document.getElementById('countdown').innerText = `Days: ${days}, Hours: ${hours}, Minutes: ${minutes}, Seconds: ${seconds}`;
+      }
+
+      function updateCountdown() {
+        const timeRemaining = calculateTimeRemaining(newYearDate);
+
+        if (timeRemaining <= 0) {
+          document.getElementById('countdown').innerText = 'Happy New Year!';
+        } else {
+          updateCountdownDisplay(timeRemaining);
+        }
+      }
+
+      // Initial update
+      updateCountdown();
+
+      // Update every second
+      setInterval(updateCountdown, 1000);
+    });
+  </script>
+</body>
+</html>
